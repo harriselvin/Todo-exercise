@@ -22,44 +22,83 @@ function addItems() {
 
     let date = (`${currentDate} ${currentMonth} ${year}`)
 
-    let item = new ListItem(1, input.value, date, true)
+    let item = new ListItem(list.length + 1, input.value, date, false)
 
     if (input.value.trim() !== '') {
+        list.push(item)
+        renderList()
+        clearInput()
+    }
+}
+
+function renderList() {
+    listItems.innerHTML = ''; // Clear current list
+    list.forEach(item => {
         let array = [item.name]
         for (let arr of array) {
             listItems.innerHTML += `
-                        <li>
-                            <input class="chkbox" type="checkbox">
-                                <span class="list-text">${arr}</span>
-                                <button class="delete">X</button>
+                        <li data-id="${item.id}">
+                            <input class="chkbox" type="checkbox" ${item.completed ? 'checked' : ''}>
+                            <span class="list-text ${item.completed ? 'completed' : ''}">${arr}</span>
+                            <button class="delete">X</button>
                         </li> 
                     `
         }
-    }
-    const deleteItems = document.querySelectorAll('.delete')
-    let checkBox = document.querySelector('.chkbox')
+    })
 
-    console.log(deleteItems);
-    console.log(checkBox);
+    // Event Listener to delete buttons
+    const deleteItems = document.querySelectorAll('.delete')
+    let checkBox = document.querySelectorAll('.chkbox')
 
     deleteItems.forEach(btn => {
-        btn.addEventListener('click', () => {
-            list.splice(0, 1)
+        btn.addEventListener('click', deleteItem)
+    })
 
-            console.log(list);
-        })
-    })   
+    checkBox.forEach(chk => {
+        chk.addEventListener('change', completed)
+    })
+}
+
+function deleteItem(e) {
+    const id = parseInt(e.target.parentElement.getAttribute('data-id'))
+    list = list.filter(item => item.id !== id)
+    renderList()
+}
+
+function completed(e) {
+    const id = parseInt(e.target.parentElement.getAttribute('data-id'))
+    const item = list.find(item => item.id === id)
+    item.completed = e.target.checked
+    renderList()
+    
+}
+
+function sortItems() {
+    list.sort((a, b) => {
+        let nameA = a.name.toUpperCase()
+        let nameB = b.name.toUpperCase()
+
+        if (nameA < nameB) {
+            return -1
+        }
+        if (nameA > nameB) {
+            return 1
+        }
+
+        return 0
+    })
+
+    renderList()
 }
 
 function submit() {
     addItems()
-    clearInput()
 }
 
 function clearInput() {
     input.value = ''
 }
 
-
         
 addBtn.addEventListener('click', submit)
+sortBtn.addEventListener('click', sortItems)

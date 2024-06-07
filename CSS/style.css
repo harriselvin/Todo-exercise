@@ -54,13 +54,13 @@ button:active {
 
 .todo-list li {
     list-style: none;
-    background-color: green;
+    background-color: #044389;
     color: white;
     padding: 1em;
     margin: .5em 0;
     border-radius: 3px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -71,12 +71,17 @@ li .chkbox {
 li .list-text {
     font-size: 20px;
     margin: 0 1em;
+    text-align: center;
 }
 
 li .delete {
     width: 40px;
     background-color: red;
     color: white;
+}
+
+.completed {
+    text-decoration: line-through;
 }
 
 @media only screen and (min-width: 507px) and (max-width: 760px) {
